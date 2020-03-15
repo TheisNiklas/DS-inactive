@@ -1,0 +1,55 @@
+﻿@page
+@model DS_InactiveWebApp.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Player</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Player.name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Player.name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Player.ally)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Player.ally)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Player.villages)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Player.villages)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Player.points)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Player.points)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Player.rank)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Player.rank)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Player.lastActive)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Player.lastActive)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-page="./Edit" asp-route-id="@Model.Player.id">Edit</a> |
+    <a asp-page="./Index">Back to List</a>
+</div>

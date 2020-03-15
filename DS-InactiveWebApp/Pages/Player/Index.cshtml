@@ -1,0 +1,146 @@
+﻿@page
+
+@model DS_InactiveWebApp.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            $('#playername').autocomplete({
+                source: '/api/playerrest/search'
+            });
+        });
+    </script>
+}
+
+<h1>Tabelle</h1>
+
+<form>
+    <div class="form-row">
+        <div class="form-group col-auto">
+            <label for="playername">Spielername</label>
+            <input class="form-control" placeholder="Spielername" id="playername" type="text" asp-for="SearchString" />
+        </div>
+        <div class="form-group col-auto">
+            <label for="playername">Radius</label>
+            <input class="form-control" placeholder="Radius" type="text" asp-for="SearchRadiusInt" />
+        </div>
+        <div class="form-group col-auto">
+            <label for="playername">Dauer</label>
+            <input class="form-control" placeholder="Dauer" type="text" asp-for="SearchDurationInt" />
+        </div>
+        <div class="form-group col-auto">
+            <input class="btn btn-primary" style="margin-top: 2rem" type="submit" value="Filter" />
+        </div>
+    </div>
+</form>
+
+<ul class="nav nav-tabs" id="TabTables" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#tabPlayer" role="tab" aria-controls="Spieler" aria-selected="true">Spieler</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#tabBB" role="tab" aria-controls="Babarendörfer" aria-selected="false">Babarendörfer</a>
+    </li>
+</ul>
+<div class="tab-content" id="TabtablesContent">
+    <div class="tab-pane fade show active" id="tabPlayer" role="tabpanel" aria-labelledby="Spieler-tab">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Player[0].name)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Player[0].ally)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Player[0].villages)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Player[0].points)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Player[0].rank)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Player[0].lastActive)
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Player)
+                {
+                    <tr>
+                        <td>
+                            <a class="btn btn-text" style="padding:0; height:100%" target="_blank" href="https://dep12.die-staemme.de/game.php?screen=info_player&id=@Html.DisplayFor(modelItem=>item.id)">
+                                @Html.DisplayFor(modelItem => item.name)
+                            </a>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ally.name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.villages)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.points)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.rank)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.lastActive)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="tab-pane fade" id="tabBB" role="tabpanel" aria-labelledby="BB-tab">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Village[0].name)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Village[0].x)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Village[0].y)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Village[0].points)
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Village)
+                {
+                    <tr>
+                        <td>
+                            <a class="btn btn-text" style="padding:0; height:100%" target="_blank" href="https://dep12.die-staemme.de/game.php?screen=info_village&id=@Html.DisplayFor(modelItem=>item.id)">
+                                @Html.DisplayFor(modelItem => item.name)
+                            </a>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.x)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.y)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.points)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+

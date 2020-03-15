@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29709.97
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DS-InactiveWebApp", "DS-InactiveWebApp\DS-InactiveWebApp.csproj", "{00D8F58B-BA08-4A58-B04B-EA3CFD16FC21}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DS_inaktiveCheck", "DS_inaktiveCheck\DS_inaktiveCheck.csproj", "{1359A96B-A8C2-4434-B817-391F05511491}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{00D8F58B-BA08-4A58-B04B-EA3CFD16FC21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00D8F58B-BA08-4A58-B04B-EA3CFD16FC21}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00D8F58B-BA08-4A58-B04B-EA3CFD16FC21}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00D8F58B-BA08-4A58-B04B-EA3CFD16FC21}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1359A96B-A8C2-4434-B817-391F05511491}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1359A96B-A8C2-4434-B817-391F05511491}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1359A96B-A8C2-4434-B817-391F05511491}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1359A96B-A8C2-4434-B817-391F05511491}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {944E5DD0-E401-4655-8D93-D57FF59AB2BC}
+	EndGlobalSection
+EndGlobal
