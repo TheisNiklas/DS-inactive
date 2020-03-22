@@ -3,14 +3,17 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>DS_TelegramBot</RootNamespace>
+  <RuntimeIdentifiers>win10-x64;debian.8-x64</RuntimeIdentifiers>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>L:\Pogrammier Projekte\Die Stämme\DS-inactive\bin\</OutputPath>
   </PropertyGroup>
-
+    
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.0" />
+    <PackageReference Include="sqlite-net-pcl" Version="1.6.292" />
+    <PackageReference Include="Telegram.Bot" Version="15.4.0" />
   </ItemGroup>
 
 </Project>

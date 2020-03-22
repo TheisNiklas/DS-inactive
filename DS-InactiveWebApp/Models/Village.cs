@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
 
 namespace DS_InactiveWebApp.Models
 {
+    [Table("village")]
     public class Village
     {
+        [Key]
         public long id { get; set; }
         public string name { get; set; }
         public long x { get; set; }

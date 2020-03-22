@@ -9,7 +9,6 @@ namespace sqlite_app
 {
     class Program
     {
-        public SqliteConnection database
 
         static string logString = "";
         static void Main(string[] args)
@@ -120,7 +119,6 @@ namespace sqlite_app
 
             //Create a table (drop if already exists first):
 
-            connection.
             var createTableCmd = connection.CreateCommand();
             createTableCmd.CommandText = "CREATE TABLE IF NOT EXISTS player(id int PRIMARY KEY, name TEXT NOT NULL, ally int, villages int, points int, rank int, lastActive DateTime)";
             createTableCmd.ExecuteNonQuery();
@@ -134,30 +132,29 @@ namespace sqlite_app
                 System.IO.StreamReader file = new System.IO.StreamReader("./player.txt");
                 while ((line = file.ReadLine()) != null)
                 {
-                    var parts = line.Split(',');
-                    parts[1] = HttpUtility.UrlDecode(parts[1]);
-                    readCmd.CommandText = "SELECT id, name, ally, villages, points, rank, lastActive FROM player WHERE id = " + parts[0];
+                    Player playerNew = new Player(line);
+                    readCmd.CommandText = "SELECT id, name, ally, villages, points, rank, lastActive FROM player WHERE id = " + playerNew.id;
                     using (var reader = readCmd.ExecuteReader())
                     {
                         if (reader.Read())
                         {
                             var player = new Player(reader);
 
-                            insertCmd.CommandText = "UPDATE player SET name = '" + parts[1] + "', ally=" + parts[2] + ", villages=" + parts[3] + ", points = " + parts[4] + ", rank= " + parts[5];
+                            insertCmd.CommandText = "UPDATE player SET name = '" + playerNew.name + "', ally=" + playerNew.ally + ", villages=" + playerNew.villages + ", points = " + playerNew.points + ", rank= " + playerNew.rank;
 
-                            if (player.points.ToString() != parts[4])
+                            if (player.points != playerNew.points)
                             {
                                 insertCmd.CommandText += ", lastActive = date('now')";
                             }
-                            insertCmd.CommandText += " WHERE id = " + parts[0];
+                            insertCmd.CommandText += " WHERE id = " + playerNew.id;
 
 
                             insertCmd.ExecuteNonQuery();
                         }
                         else
                         {
-                            insertCmd.CommandText = "INSERT INTO player (id, name, ally, villages, points, rank, lastActive) VALUES(" + parts[0] + ",'" + parts[1] + "'," + parts[2] + "," + parts[3] + "," + parts[4] + ","
-                                + parts[5] + ", date('now'))";
+                            insertCmd.CommandText = "INSERT INTO player (id, name, ally, villages, points, rank, lastActive) VALUES(" + playerNew.id + ",'" + playerNew.name + "'," + playerNew.ally + "," + playerNew.villages + "," + playerNew.points + ","
+                                + playerNew.rank + ", date('now'))";
                             insertCmd.ExecuteNonQuery();
                         }
                     }
@@ -169,20 +166,20 @@ namespace sqlite_app
             }
 
             //Read the newly inserted data:
-            var selectCmd = connection.CreateCommand();
-            selectCmd.CommandText = "SELECT id, name, ally, villages, points, rank, lastActive FROM player WHERE lastActive < date('now', '-10 day')";
+            //var selectCmd = connection.CreateCommand();
+            //selectCmd.CommandText = "SELECT id, name, ally, villages, points, rank, lastActive FROM player WHERE lastActive < date('now', '-10 day')";
 
-            using (var sw = new System.IO.StreamWriter("./inactive.txt", false))
-            {
-                using (var reader = selectCmd.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        var player = new Player(reader);
-                        sw.WriteLine(player.name);
-                    }
-                }
-            }
+            //using (var sw = new System.IO.StreamWriter("./inactive.txt", false))
+            //{
+            //    using (var reader = selectCmd.ExecuteReader())
+            //    {
+            //        while (reader.Read())
+            //        {
+            //            var player = new Player(reader);
+            //            sw.WriteLine(player.name);
+            //        }
+            //    }
+            //}
         }
         static void updateVillage(SqliteConnection connection)
         {
@@ -203,21 +200,20 @@ namespace sqlite_app
                 System.IO.StreamReader file = new System.IO.StreamReader("./village.txt");
                 while ((line = file.ReadLine()) != null)
                 {
-                    var parts = line.Split(',');
-                    parts[1] = HttpUtility.UrlDecode(parts[1]);
-                    readCmd.CommandText = "SELECT id, name, x, y, player, points FROM village WHERE id = " + parts[0];
+                    Village village = new Village(line);
+                    readCmd.CommandText = "SELECT id, name, x, y, player, points FROM village WHERE id = " + village.id;
                     using (var reader = readCmd.ExecuteReader())
                     {
                         if (reader.Read())
                         {
                             //var village = new Village(reader);
-                            insertCmd.CommandText = "UPDATE village SET name = '" + parts[1] + "', x=" + parts[2] + ", y=" + parts[3] + ", player = " + parts[4] + ", points= " + parts[5] + " WHERE id = " + parts[0];
+                            insertCmd.CommandText = "UPDATE village SET name = '" + village.name + "', x=" + village.x + ", y=" + village.y + ", player = " + village.player + ", points= " + village.points + " WHERE id = " + village.id;
                             insertCmd.ExecuteNonQuery();
                         }
                         else
                         {
-                            insertCmd.CommandText = "INSERT INTO village (id, name, x, y, player, points) VALUES(" + parts[0] + ",'" + parts[1] + "'," + parts[2] + "," + parts[3] + "," + parts[4] + ","
-                                + parts[5] + ")";
+                            insertCmd.CommandText = "INSERT INTO village (id, name, x, y, player, points) VALUES(" + village.id + ",'" + village.name + "'," + village.x + "," + village.y + "," + village.player + ","
+                                + village.points + ")";
                             insertCmd.ExecuteNonQuery();
                         }
                     }
@@ -248,22 +244,20 @@ namespace sqlite_app
                 System.IO.StreamReader file = new System.IO.StreamReader("./ally.txt");
                 while ((line = file.ReadLine()) != null)
                 {
-                    var parts = line.Split(',');
-                    parts[1] = HttpUtility.UrlDecode(parts[1]);
-                    parts[2] = HttpUtility.UrlDecode(parts[2]);
-                    readCmd.CommandText = "SELECT id, name, tag, members, villages, points, all_points, rank FROM ally WHERE id = " + parts[0];
+                    Ally ally = new Ally(line);
+                    readCmd.CommandText = "SELECT id, name, tag, members, villages, points, all_points, rank FROM ally WHERE id = " + ally.id;
                     using (var reader = readCmd.ExecuteReader())
                     {
                         if (reader.Read())
                         {
                             //var village = new Village(reader);
-                            insertCmd.CommandText = "UPDATE ally SET name = '" + parts[1] + "', tag='" + parts[2] + "', members=" + parts[3] + ", villages=" + parts[4] + ", points= " + parts[5] + ", all_points=" + parts[6] + ", rank=" + parts[7] + " WHERE id = " + parts[0];
+                            insertCmd.CommandText = "UPDATE ally SET name = '" + ally.name + "', tag='" + ally.tag + "', members=" + ally.members + ", villages=" + ally.villages + ", points= " + ally.points + ", all_points=" + ally.all_points + ", rank=" + ally.rank+ " WHERE id = " + ally.id;
                             insertCmd.ExecuteNonQuery();
                         }
                         else
                         {
-                            insertCmd.CommandText = "INSERT INTO ally (id, name, tag, members, villages, points, all_points, rank) VALUES(" + parts[0] + ",'" + parts[1] + "','" + parts[2] + "'," + parts[3] + "," + parts[4] + ","
-                                + parts[5] + "," + parts[6] + "," + parts[7] + ")";
+                            insertCmd.CommandText = "INSERT INTO ally (id, name, tag, members, villages, points, all_points, rank) VALUES(" + ally.id + ",'" + ally.name + "','" + ally.tag + "'," + ally.members + "," + ally.villages + ","
+                                + ally.points + "," + ally.all_points + "," + ally.rank + ")";
                             insertCmd.ExecuteNonQuery();
                         }
                     }
@@ -295,28 +289,28 @@ namespace sqlite_app
                 System.IO.StreamReader file = new System.IO.StreamReader("./kill_att.txt");
                 while ((line = file.ReadLine()) != null)
                 {
-                    var parts = line.Split(',');
-                    readCmd.CommandText = "SELECT id, att_rank, att_kill, lastAtt, def_rank, def_kill, lastDef, all_rank, all_kill, lastAll, sup_kill, lastsup FROM kill WHERE id = " + parts[1];
+                    Kill_att killAtt = new Kill_att(line);
+                    readCmd.CommandText = "SELECT id, att_rank, att_kill, lastAtt, def_rank, def_kill, lastDef, all_rank, all_kill, lastAll, sup_kill, lastsup FROM kill WHERE id = " + killAtt.id;
                     using (var reader = readCmd.ExecuteReader())
                     {
                         if (reader.Read())
                         {
-                            var kill = new Kill(reader);
+                            Kill kill = new Kill(reader);
 
-                            insertCmd.CommandText = "UPDATE kill SET att_rank = " + parts[0] + ", att_kill=" + parts[2];
+                            insertCmd.CommandText = "UPDATE kill SET att_rank = " + killAtt.rank + ", att_kill=" + killAtt.kills;
 
-                            if (kill.att_kill.ToString() != parts[2])
+                            if (kill.att_kill != killAtt.kills)
                             {
                                 insertCmd.CommandText += ", lastAtt = date('now')";
                             }
-                            insertCmd.CommandText += " WHERE id = " + parts[1];
+                            insertCmd.CommandText += " WHERE id = " + killAtt.id;
 
 
                             insertCmd.ExecuteNonQuery();
                         }
                         else
                         {
-                            insertCmd.CommandText = "INSERT INTO kill (id, att_rank, att_kill, lastAtt) VALUES(" + parts[1] + "," + parts[0] + "," + parts[2] + ", date('now'))";
+                            insertCmd.CommandText = "INSERT INTO kill (id, att_rank, att_kill, lastAtt) VALUES(" + killAtt.id + "," + killAtt.rank + "," + killAtt.kills + ", date('now'))";
                             insertCmd.ExecuteNonQuery();
                         }
                     }
@@ -326,27 +320,27 @@ namespace sqlite_app
                 file = new System.IO.StreamReader("./kill_def.txt");
                 while ((line = file.ReadLine()) != null)
                 {
-                    var parts = line.Split(',');
-                    readCmd.CommandText = "SELECT id, att_rank, att_kill, lastAtt, def_rank, def_kill, lastDef, all_rank, all_kill, lastAll, sup_kill, lastsup FROM kill WHERE id = " + parts[1];
+                    Kill_def killDef = new Kill_def(line);
+                    readCmd.CommandText = "SELECT id, att_rank, att_kill, lastAtt, def_rank, def_kill, lastDef, all_rank, all_kill, lastAll, sup_kill, lastsup FROM kill WHERE id = " + killDef.id;
                     using (var reader = readCmd.ExecuteReader())
                     {
                         if (reader.Read())
                         {
-                            var kill = new Kill(reader);
+                            Kill kill = new Kill(reader);
 
-                            insertCmd.CommandText = "UPDATE kill SET def_rank = " + parts[0] + ", def_kill=" + parts[2];
+                            insertCmd.CommandText = "UPDATE kill SET def_rank = " + killDef.rank + ", def_kill=" + killDef.kills;
 
-                            if (kill.def_kill.ToString() != parts[2])
+                            if (kill.def_kill != killDef.kills)
                             {
                                 insertCmd.CommandText += ", lastDef = date('now')";
                             }
-                            insertCmd.CommandText += " WHERE id = " + parts[1];
+                            insertCmd.CommandText += " WHERE id = " + killDef.id;
 
                             insertCmd.ExecuteNonQuery();
                         }
                         else
                         {
-                            insertCmd.CommandText = "INSERT INTO kill (id, def_rank, def_kill, lastAtt) VALUES(" + parts[1] + "," + parts[0] + "," + parts[2] + ", date('now'))";
+                            insertCmd.CommandText = "INSERT INTO kill (id, def_rank, def_kill, lastDef) VALUES(" + killDef.id + "," + killDef.rank + "," + killDef.kills + ", date('now'))";
                             insertCmd.ExecuteNonQuery();
                         }
                     }
@@ -356,34 +350,42 @@ namespace sqlite_app
                 file = new System.IO.StreamReader("./kill_all.txt");
                 while ((line = file.ReadLine()) != null)
                 {
-                    var parts = line.Split(',');
-                    readCmd.CommandText = "SELECT id, att_rank, att_kill, lastAtt, def_rank, def_kill, lastDef, all_rank, all_kill, lastAll, sup_kill, lastsup FROM kill WHERE id = " + parts[1];
+                    Kill_all killAll = new Kill_all(line);
+                    readCmd.CommandText = "SELECT id, att_rank, att_kill, lastAtt, def_rank, def_kill, lastDef, all_rank, all_kill, lastAll, sup_kill, lastsup FROM kill WHERE id = " + killAll.id;
                     using (var reader = readCmd.ExecuteReader())
                     {
                         if (reader.Read())
                         {
-                            var kill = new Kill(reader);
+                            Kill kill = new Kill(reader);
 
-                            long sup_kill = long.Parse(parts[2]) - kill.att_kill - kill.def_kill;
+                            long killSup = killAll.kills - kill.att_kill - kill.def_kill;
 
-                            insertCmd.CommandText = "UPDATE kill SET all_rank = " + parts[0] + ", all_kill=" + parts[2] + ", sup_kill =" + sup_kill + ", ";
+                            insertCmd.CommandText = "UPDATE kill SET all_rank = " + killAll.rank + ", all_kill=" + killAll.kills + ", sup_kill=" + killSup;
 
-                            if (kill.att_kill.ToString() != parts[2])
+                            if (kill.att_kill != killAll.kills)
                             {
                                 insertCmd.CommandText += ", lastAll = date('now')";
                             }
-                            insertCmd.CommandText += " WHERE id = " + parts[1];
+                            if (kill.sup_kill != killSup)
+                            {
+                                insertCmd.CommandText += ", lastSup = date('now')";
+                            }
+
+
+                            insertCmd.CommandText += " WHERE id = " + killAll.id;
 
                             insertCmd.ExecuteNonQuery();
                         }
                         else
                         {
-                            insertCmd.CommandText = "INSERT INTO kill (id, all_rank, all_kill, lastAll) VALUES(" + parts[1] + "," + parts[0] + "," + parts[2] + ", date('now'))";
+                            insertCmd.CommandText = "INSERT INTO kill (id, all_rank, all_kill, lastAll, sup_kill, lastsup) VALUES(" + killAll.id + "," + killAll.rank + "," + killAll.kills + ", date('now')," + killAll.kills + ", date('now'))";
                             insertCmd.ExecuteNonQuery();
                         }
                     }
                 }
                 file.Close();
+
+
 
                 transaction.Commit();
             }
@@ -409,6 +411,17 @@ namespace sqlite_app
             rank = reader.GetInt64(5);
             lastActive = reader.GetDateTime(6);
         }
+        public Player(string line)
+        {
+            var parts = line.Split(',');
+
+            id = long.Parse(parts[0]);
+            name = HttpUtility.UrlDecode(parts[1]);
+            ally = long.Parse(parts[2]);
+            villages = long.Parse(parts[3]);
+            points = long.Parse(parts[4]);
+            rank = long.Parse(parts[5]);
+        }
     }
 
     class Village
@@ -428,6 +441,17 @@ namespace sqlite_app
             y = reader.GetInt64(3);
             player = reader.GetInt64(4);
             points = reader.GetInt64(5);
+        }
+        public Village(string line)
+        {
+            var parts = line.Split(',');
+
+            id = long.Parse(parts[0]);
+            name = HttpUtility.UrlDecode(parts[1]);
+            x = long.Parse(parts[2]);
+            y = long.Parse(parts[3]);
+            player = long.Parse(parts[4]);
+            points = long.Parse(parts[5]);
         }
     }
 
@@ -453,6 +477,19 @@ namespace sqlite_app
             all_points = reader.GetInt64(6);
             rank = reader.GetInt64(7);
         }
+        public Ally(string line)
+        {
+            var parts = line.Split(',');
+
+            id = long.Parse(parts[0]);
+            name = HttpUtility.UrlDecode(parts[1]);
+            tag = HttpUtility.UrlDecode(parts[2]);
+            members = long.Parse(parts[3]);
+            villages = long.Parse(parts[4]);
+            points = long.Parse(parts[5]);
+            all_points = long.Parse(parts[6]);
+            rank = long.Parse(parts[7]);
+        }
     }
 
     class Kill
@@ -473,17 +510,60 @@ namespace sqlite_app
         public Kill(SqliteDataReader reader)
         {
             id = reader.GetInt64(0);
-            if (!reader.IsDBNull(1))att_rank = reader.GetInt64(1);
-            if (!reader.IsDBNull(2))att_kill = reader.GetInt64(2);
-            if (!reader.IsDBNull(3))lastAtt = reader.GetDateTime(3);
+            if (!reader.IsDBNull(1)) att_rank = reader.GetInt64(1);
+            if (!reader.IsDBNull(2)) att_kill = reader.GetInt64(2);
+            if (!reader.IsDBNull(3)) lastAtt = reader.GetDateTime(3);
             if (!reader.IsDBNull(4)) def_rank = reader.GetInt64(4);
-            if (!reader.IsDBNull(5))def_kill = reader.GetInt64(5);
+            if (!reader.IsDBNull(5)) def_kill = reader.GetInt64(5);
             if (!reader.IsDBNull(6)) lastDef = reader.GetDateTime(6);
             if (!reader.IsDBNull(7)) all_rank = reader.GetInt64(7);
             if (!reader.IsDBNull(8)) all_kill = reader.GetInt64(8);
             if (!reader.IsDBNull(9)) lastAll = reader.GetDateTime(9);
             if (!reader.IsDBNull(10)) sup_kill = reader.GetInt64(10);
             if (!reader.IsDBNull(11)) lastSup = reader.GetDateTime(11);
+        }
+    }
+
+    class Kill_all
+    {
+        public long rank = 0;
+        public long id = 0;
+        public long kills = 0;
+
+        public Kill_all(string line) 
+        {
+            var parts = line.Split(',');
+            long.TryParse(parts[0], out rank);
+            long.TryParse(parts[1], out id);
+            long.TryParse(parts[2], out kills);
+        }
+    }
+
+    class Kill_att
+    {
+        public long rank;
+        public long id;
+        public long kills;
+        public Kill_att(string line)
+        {
+            var parts = line.Split(',');
+            long.TryParse(parts[0], out rank);
+            long.TryParse(parts[1], out id);
+            long.TryParse(parts[2], out kills);
+        }
+    }
+
+    class Kill_def
+    {
+        public long rank;
+        public long id;
+        public long kills;
+        public Kill_def(string line)
+        {
+            var parts = line.Split(',');
+            long.TryParse(parts[0], out rank);
+            long.TryParse(parts[1], out id);
+            long.TryParse(parts[2], out kills);
         }
     }
 }

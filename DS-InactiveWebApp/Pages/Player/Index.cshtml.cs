@@ -42,10 +42,6 @@ namespace DS_InactiveWebApp
                     string sql = "SELECT id, name, ally, villages, points, rank, lastActive FROM player WHERE name = '" + SearchString + "'";
                     var resultPlayer = _context.Player.FromSqlRaw(sql).ToList();
 
-                    string insertCmd = "INSERT INTO player (id, name, ally, villages, points, rank, lastActive) VALUES(1,'Test',1,1,1,1, date('now'))";
-                    var test = _context.Player.FromSqlRaw(insertCmd);
-
-
                     if (resultPlayer.Count == 1)
                     {
                         sql = "SELECT id, name, x, y, player, points FROM village WHERE player = " + resultPlayer[0].id;
@@ -53,7 +49,14 @@ namespace DS_InactiveWebApp
 
                         foreach (var village in resultVillage)
                         {
-                            sql = @"SELECT DISTINCT player.id, player.name, player.ally, player.villages, player.points, player.rank, player.lastActive FROM player LEFT JOIN village on player.id = village.player WHERE lastActive <= datetime('now', '-" + SearchDurationInt + @" day') 
+                            sql = @"SELECT DISTINCT player.id, player.name, player.ally, player.villages, player.points, player.rank, player.lastActive, 
+                                            ally.id, ally.name, ally.tag, ally.members, ally.villages, ally.points, ally.all_points, ally.rank, 
+                                            kill.id, kill.att_rank, kill.att_kill, kill.lastAtt, kill.def_rank, kill.def_kill, kill.lastDef, kill.all_rank, kill.all_kill, kill.lastAll, kill.sup_kill, kill.lastsup
+                                            FROM player 
+                                            LEFT JOIN kill on player.id = kill.id
+                                            LEFT JOIN village on player.id = village.player 
+                                            LEFT JOIN village on player.id = village.player 
+                                            WHERE lastActive <= datetime('now', '-" + SearchDurationInt + @" day') 
                                             AND(village.x - " + village.x + ") * (village.x - " + village.x + ") + (village.y - " + village.y + ") * (village.y - " + village.y + ") <= " + SearchRadiusInt * SearchRadiusInt;
                             locPlayer.AddRange(_context.Player.FromSqlRaw(sql).ToList());
 

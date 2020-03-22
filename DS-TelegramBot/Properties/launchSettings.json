@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "DS-TelegramBot": {
+      "commandName": "Project",
+      "workingDirectory": "L:\\Pogrammier Projekte\\Die Stämme\\DS-inactive\\bin\\netcoreapp3.1"
+    }
+  }
+}

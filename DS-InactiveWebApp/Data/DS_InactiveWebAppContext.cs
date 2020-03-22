@@ -16,8 +16,12 @@ namespace DS_InactiveWebApp.Data
 
         public DbSet<DS_InactiveWebApp.Models.Player> Player { get; set; }
         public DbSet<DS_InactiveWebApp.Models.Village> Village { get; set; }
+        public DbSet<DS_InactiveWebApp.Models.Kill> Kill { get; set; }
+        public DbSet<DS_InactiveWebApp.Models.Ally> Ally { get; set; }
 
+        
         protected override void OnConfiguring(DbContextOptionsBuilder options)
-            => options.UseSqlite("Data Source = ./SqliteDB.db; Mode=ReadOnly");
+            => options.UseSqlite("Data Source = L:/Pogrammier Projekte/Die Stämme/DS-inactive/bin/netcoreapp3.1/SqliteDB.db; Mode=ReadOnly");
+            //=> options.UseSqlite("Data Source = ./SqliteDB.db; Mode=ReadOnly");
     }
 }

@@ -10,7 +10,7 @@
   "profiles": {
     "IIS Express": {
       "commandName": "IISExpress",
-      "workingDirectory": "L:\\Pogrammier Projekte\\Die Stämme\\DS-InactiveWebApp\\bin\\netcoreapp3.1\\",
+      "workingDirectory": "L:\\Pogrammier Projekte\\Die Stämme\\DS-inactive\\bin\\netcoreapp3.1\\",
       "launchBrowser": true,
       "launchUrl": "player?SearchString=Wichti1&SearchRadiusInt=10&SearchDurationInt=10",
       "environmentVariables": {
