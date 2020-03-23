@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>L:\Pogrammier Projekte\Die Stämme\DS-inactive\bin\</OutputPath>
+    <OutputPath>L:\Pogrammier Projekte\Die Stämme\DS-inactive\bin\netcoreapp3.1\InactiveCheck\</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>

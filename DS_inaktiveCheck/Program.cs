@@ -13,6 +13,28 @@ namespace sqlite_app
         static string logString = "";
         static void Main(string[] args)
         {
+            int min = 0;
+            if (DateTime.Now.Minute < 56)
+            {
+                min = 55 - DateTime.Now.Minute;
+            }
+            else
+            {
+                min = 115 - DateTime.Now.Minute;
+            }
+            int mill = min * 60000;
+            int period = 60 * 60 * 1000;
+            System.Threading.Timer dt = new System.Threading.Timer(runUpdate, null, mill, period);
+
+            Console.WriteLine($"Update-Client started.");
+
+            Console.ReadLine();
+        }
+
+        static void runUpdate(object state)
+        {
+            Console.WriteLine(DateTime.Now.ToString() + " - Update started");
+
             download("player");
             download("village");
             download("ally");
@@ -23,7 +45,8 @@ namespace sqlite_app
 
             var connectionStringBuilder = new SqliteConnectionStringBuilder();
 
-            connectionStringBuilder.DataSource = "./SqliteDB.db";
+            DirectoryInfo di = Directory.GetParent(Directory.GetCurrentDirectory());
+            connectionStringBuilder.DataSource = Path.Combine(di.FullName, "SqliteDB.db");
 
             using (var connection = new SqliteConnection(connectionStringBuilder.ConnectionString))
             {
@@ -35,6 +58,7 @@ namespace sqlite_app
                 //outputVillages(connection, "Wichti1", 10, 10);
             }
             outputLog();
+            Console.WriteLine(DateTime.Now.ToString() + " - Update done");
         }
 
         static void outputVillages(SqliteConnection connection, string playername, int radius, int days)
@@ -92,7 +116,7 @@ namespace sqlite_app
         static void download(string filename)
         {
             FileInfo fi = new FileInfo("./" + filename + ".txt");
-            if (fi.LastWriteTime <= DateTime.Now.AddHours(-23))
+            if (fi.LastWriteTime <= DateTime.Now.AddMinutes(-59))
             {
                 WebClient Client = new WebClient();
                 Client.DownloadFile("https://dep12.die-staemme.de/map/" + filename + ".txt", "./" + filename + ".txt");
@@ -101,6 +125,8 @@ namespace sqlite_app
             else
             {
                 logString += filename + ".txt not downloaded, time < 23 hours\nInfos: fi.date=" + fi.LastWriteTime;
+                //System.Threading.Thread.Sleep(2000);
+                //download(filename);
             }
         }
 

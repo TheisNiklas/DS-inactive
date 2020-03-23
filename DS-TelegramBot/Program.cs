@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,8 +20,10 @@ namespace DS_TelegramBot
         public static async Task Main()
         {
             botClient = new TelegramBotClient("965325023:AAEBQSxxB7VVZvhvYtvNLRoJSMZ78LS0VqU");
-            sqlChats = new SqlChats("chats.db");
-            sqlData = new SqlData("SqliteDB.db");
+
+            DirectoryInfo di = Directory.GetParent(Directory.GetCurrentDirectory());
+            sqlChats = new SqlChats(Path.Combine(di.FullName, "chats.db"));
+            sqlData = new SqlData(Path.Combine(di.FullName, "SqliteDB.db"));
             
 
             var me = await botClient.GetMeAsync();
